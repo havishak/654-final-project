@@ -1,0 +1,3 @@
+The data in this folder is for the small sample of 5004 observations. The original data had more than two hundred thosand images, and can be accessed here: https://www.kaggle.com/datasets/paultimothymooney/breast-histopathology-images.
+The smaller sample I constructed for the project can be found here: https://www.kaggle.com/datasets/havikhurana/fp-image
+The larger sample that I constructed for this project can be found here: https://www.kaggle.com/code/havikhurana/image-feature-extraction/data
