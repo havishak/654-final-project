@@ -23,6 +23,8 @@ The code for the final project is spread over the following Kaggle notebooks.
 
 4. Logistic regression models on small subset with all features (5004 rows and 8194 columns). [**here**](https://www.kaggle.com/code/havikhurana/image-prediction-models-small-subset?scriptVersionId=113225845)
 
+5. Github repo for the project. [**here**](https://github.com/havishak/654-final-project.git)
+
 
 **Note: The original image data was accessed through Kaggle. [See here](www.kaggle.com/datasets/paultimothymooney/breast-histopathology-images)**
 
