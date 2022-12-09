@@ -1,8 +1,8 @@
 ---
-title: "654: Machine Learning \n Final Report"
+title: "654: Machine Learning Final Project"
 author: "Havisha Khurana"
+bibliography: E:/Dropbox (University of Oregon)/2022-23/Fall22/654 Machine Learning/Rwork/654-final-project/references.bib
 output: pdf_document
-bibliography: C:/SDXC/Dropbox (University of Oregon)/2022-23/Fall22/654 Machine Learning/Rwork/references.bib  
 ---
 
 ```{r setup, include=FALSE}
@@ -15,47 +15,46 @@ knitr::opts_chunk$set(echo = TRUE,
 
 The code for the final project is spread over the following Kaggle notebooks.
 
-1. Read image data and extract features for 50,000 images. [here](www.kaggle.com/code/havikhurana/image-feature-extraction)
+1. Read image data and extract features for 50,000 images. [**here**](www.kaggle.com/code/havikhurana/image-feature-extraction)
 
-2. Reduce features by removing zero variance, near zero variance, and highly correlated features from the training data set. [here](www.kaggle.com/code/havikhurana/dataset-reduction) 
+2. Reduce features by removing zero variance, near zero variance, and medium to highly correlated features from the training data set. [**here**](www.kaggle.com/code/havikhurana/dataset-reduction) 
 
-3. Logistic regression models on large subset (49921 rows and 1373 columns). [here](www.kaggle.com/code/havikhurana/logistic-regression-on-reduced-dataset?scriptVersionId=113236463) 
+3. Logistic regression models on large subset (49921 rows and 1373 columns). [**here**](www.kaggle.com/code/havikhurana/logistic-regression-on-reduced-dataset?scriptVersionId=113236463) 
 
-4. Logistic regression models on small subset with all features (5004 rows and 8194 columns). [here](https://www.kaggle.com/code/havikhurana/image-prediction-models-small-subset?scriptVersionId=113225845)
+4. Logistic regression models on small subset with all features (5004 rows and 8194 columns). [**here**](https://www.kaggle.com/code/havikhurana/image-prediction-models-small-subset?scriptVersionId=113225845)
 
 
-**Note: The original image data was accessed from Kaggle. [See here](www.kaggle.com/datasets/paultimothymooney/breast-histopathology-images)**
+**Note: The original image data was accessed through Kaggle. [See here](www.kaggle.com/datasets/paultimothymooney/breast-histopathology-images)**
 
 \newpage
 
 # Research problem 
 
-The project focuses on an image classification task, precisely whether cancer was found or not in medical images of regions of the breast.Cancer is the second leading cause of deaths among American women of all races and origin [@heron2021national], and the leading cause of death in the world [@ferlay2021cancer]. Furthermore, breast cancer is among the most common forms of cancer, accounting for 10 million cases worldwide in 2020 [@ferlay2021cancer]. There are two primary types of breast cancers, Ductal carcinoma in situ (DCIS) and Invasive breast cancer (ILS or IDC), and the latter makes up for about 70-80% of all such cases [@sharma2010various]. The diagnosis of the same is time consuming and challenging primarily because  pathologist have to scan a large swathes of benign regions to ultimately identify the areas of malignancy [@janowczyk2016deep; @cruz2014automatic]. Precise identification of IDC is required to direct patient treatment. In recent years, many machine learning models using deep neural networks have been used to aid medical and biological classification [@janowczyk2016deep; @cruz2014automatic]. Thus, one potential benefit of a predictive model for this outcome is to speed-up the diagnosis and begin treatment for patients with this condition.
+The project focuses on an image classification task, precisely whether cancer was found or not in medical images of regions of the breast. Cancer is the second leading cause of deaths among American women of all races and origin [@heron2021national], and the leading cause of death in the world [@ferlay2021cancer]. Furthermore, breast cancer is among the most common forms of cancer, accounting for 10 million cases worldwide in 2020 [@ferlay2021cancer]. There are two primary types of breast cancers, Ductal carcinoma in situ (DCIS) and Invasive breast cancer (ILS or IDC), the latter making up for 70-80% of all breast cancer cases [@sharma2010various]. The diagnosis of the disease is time consuming and challenging process primarily because  pathologist have to scan large swathes of benign regions to ultimately identify the areas of malignancy [@janowczyk2016deep; @cruz2014automatic]. Precise identification of IDC is required to direct patient treatment. In recent years, many machine learning models using deep neural networks have been used to aid medical and biological classification [@janowczyk2016deep; @cruz2014automatic]. Thus, one potential benefit of a predictive model for medical image classification is to speed-up the diagnosis process and begin treatment for patients.
 
-
-Another personal motivation to pursue this project is to get exposure working with image data. I anticipate the following challenges while working with the image data set. First, each image is a large file and requires extensive computational resources. Therefore, I can not load all the images and transform it at once. Second, the quality of an image is contingent on many factors, eg., the device from which it's taken, the magnification, the angle, blur, zoom, flip, etc. Therefore, two images that appear the same to human eye, might be very viewed differently by the computer. To overcome this challenge, data augmentation is performed at times to add random noise to the training dataset for replicating close to real-life scenarios. However, this would increase the sample size, which further burdens the computational resources. In this project, however, since I'll be working with medical images taken by professional radiologists, I do not expect only this to be a major roadblock. Lastly, I am working with colored images, therefore, each image will be represented by a three-dimensional array, with each cell representing a pixel. Though, in my professional life, I don't anticipate working with medical or biological images, I believe this is a good first step to building skills for image analysis using machine learning.
+A personal motivation to pursue this project was to get exposure working with image data. I anticipated the following challenges. First, reading and storing image data. Unlike rectangular datasets, each image was a .jpg file and the entire data set was spread across nested directories. Moreover, each image is a big file and loading all of them together was computationally intensive. Second, the quality of an image is contingent on many factors, eg., the device from which it is taken, the magnification, the angle, blur, zoom, flip, etc. Therefore, two images that appear the same to human eye, might be very encoded differently by the computer. To overcome this challenge, data augmentation is performed to add random noise to the training dataset for replicating close to real-life scenarios. However, doing so would increase the sample size, which further burdens the computational resources. In this project, however, since I am working with medical images taken by professional radiologists, I do not expect image quality to be a major roadblock. Lastly, I am working with colored images, therefore, each image will be represented by a three-dimensional array, with each cell in the matrix representing a pixel. Though, in my professional life, I don't anticipate working with medical or biological images, I believe this is a good first step to building skills for image analysis using machine learning.
 
 
 # Description of the data
 
-The description of the data is divided into the following subsections: data source, data representation, feature extraction, and data reduction. 
+The section on description of the data is divided into the following subsections: data source, data representation, feature extraction, and data reduction. 
 
 
 ## Data Source
 
-The data comes from a 2014 study [@cruz2014automatic], with images of the entire region of the breast for 162 cancer patients. I accessed it through Kaggle (link provided in the beginning of the report). It consists of whole mount slide images of Breast Cancer specimens scanned at 40x. Each slide, covering the entire breast area, was broken into 277,524 patches of size 50 x 50. Of the total, 198,738 (71.5%) patches were IDC negative and 78,786 (28.5%) patches were IDC positive.
+The data comes from a 2014 study [@cruz2014automatic], with images of the entire region of the breast for 162 cancer patients. I accessed it through Kaggle (link provided in the beginning of the report). It consisted of whole mount slide images of Breast Cancer specimens scanned at 40x. Each slide, covering the entire breast area, was broken into 277,524 patches of size 50 x 50 in RGB. Of the total, 198,738 (71.5%) patches were IDC negative and 78,786 (28.5%) patches were IDC positive.
 
 ## Data Representation
 
-The data is provided in .jpg format. I used Python module Keras [@] to preprocess the images. First, I read the .jpg image in the environment. Next, I converted each image to an array. As a result, each patch of image is a 3-D array of 50 x 50, where each value in the matrix represents the pixel brightness on the the particular row and column combination. The dimensions represents the red, blue, and green light channels (RGB). Figure 1 shows how an image looks in light different channels. 
+The data were provided in .jpg format. I used Python module Keras [@chollet2015] to preprocess the images. First, I read the .jpg image in the environment. Next, I converted each image to an array. As a result, each patch of image was represented by a three-dimensional array of 50 x 50, where each value in the matrix represents the pixel brightness on the particular row and column combination. The dimensions represents the red, blue, and green light channels (RGB). Figure 1 shows how one image looked in different light channels. 
 
 ![Image in different light channels](C:/Users/havis/Documents/images/image_different_channels.jpg)
 
-Figure 2 shows 5 random images in RGB and whether the patch was cancerous or not. 
+Figure 2 shows five random images in RGB and whether the patch was cancerous or not (IDC positive or negative). 
 
 ![Random Sample of 5 images](C:/Users/havis/Documents/images/cancerous.jpg)
 
-Therefore, each image file can be associated with 7,500 (50 x 50 x 3) numbers representing the pixel brightness in the three light channels. However, these number are not meaningful in themselves, as they don't communicate how the image appears as a whole. There are several ways image features can be calculated, for instance, the mean intensity of image in all channels, the edges and boundaries in an image, number of elements in an image, etc. Since it requires expertise to know which features to extract, I decided not to hand-define any custom features. Instead, I'll use a pre-trained image classification model, ResNet-50, which generate 8,192 features for the images in this data set. 
+Thus, each image file can be associated with 7,500 (50 x 50 x 3) numbers representing the pixel brightness in the three light channels. However, these number are not meaningful in themselves, as they did not communicate how the image appears as a whole. There are several ways image features can be calculated, for instance, the mean intensity of image in all channels, the edges and boundaries in an image, number of elements in an image, etc. Since it required expertise to know which features to extract, I decided not to hand-define any custom features. Instead, I used a pre-trained image classification model, ResNet-50, which generated 8,192 features for the images in this data set. 
 
 ## Data Features using ResNet-50
 
@@ -69,24 +68,23 @@ I used Python module, Keras[@chollet2015] and TensorFlow[@tensorflow2015], to lo
 
 Given the very large size of the original dataset and the limited computations power on my end, I decided to work with two subsets samples of this data, one relatively large sample with close to 50,000 random images, and other, a smaller sample with 5,000 images. The smaller sample was taken from the larger sample. 
 
-The larger sample is a random selection of close to 50,000 images. The dataset with all 8,000 features was 3Gb large and took up 20Gb RAM on opening. Since this would have drastically limited the resources for model training, I decided to reduce the features for this sample. First, I split the data into training and testing datasets. Next, on the training dataset, I removed all features that had zero variance, near zero variance, or a correlation of 0.5. This reduced the number of features to 1371. Thus, the larger sample had a final size of 49,921 rows and 1,373 columns.
+The larger sample was a random selection of close to 50,000 images. The dataset with all 8,000 features was 3Gb large and took up 20Gb RAM on loading. Since the size drastically limited the resources for model training, I decided to reduce the features for this sample. First, I splitted the data into training and testing datasets. Next, on the whole training dataset, I removed all features that had zero variance, near zero variance, or a correlation of 0.5 or higher. This reduced the number of features to 1,371. Thus, the larger sample had a final size of 49,921 rows and 1,373 columns.
 
-The smaller sample had all the 8,192 features. However, the recipe included steps to remove columns based on the same criteria as mentioned above. This dataset had a final size of 5,004 rows and 8,194 columns. Note there was one ID column and one outcome column in both the datasets. <Other if doing>
-
+The smaller sample had all the 8,192 features. However, the recipe included steps to remove columns based on the same criteria as mentioned above. This dataset had a final size of 5,004 rows and 8,194 columns. Note there was one ID column (serian_num) and one outcome column (truth_val) in both the datasets. 
 
 # Description of the models
 
-Since this is a classification problem with two classes, positive or negative for IDC, I will use logistic regression. Given the large number of features, over-fitting is possible, and so I will run penalized logistic regressions as well with both ridge penalty and lasso penalty. Logistic regression is analogous to linear regression, however, instead of predicting a continuous outcome, it predicts the probability of one of the two outcome classes. I will choose models based on the logistic loss criteria, i.e., a model with the small logistic loss. The model assumes that the predictors have a linear relationship with the outcome, all important predictors are present in the model, and there is no multicollinearity.In the regularized version of the logistic regression, we penalize the model for over-fitting by adding a penalty term. This constrains the size of the predicted coefficients.  
+At heart, this was a classification problem with two classes, positive or negative for IDC. Therefore, I decided to use logistic regression. Given the large number of features, over-fitting was possible, and so I also fit penalized logistic regressions models with both ridge penalty and lasso penalty. Logistic regression is analogous to linear regression. However, instead of predicting a continuous outcome, it predicts the probability of an observation to be in one of the two outcome classes. Model selection was done using the logistic loss criteria, i.e., a model with the small logistic loss was selected. 
 
-In unregularized logistic regression, there are no hyperparameter to be tuned. In ridge regression, the penalty is the euclidean norm, whereas in lasso regression, the penalty is the least absolute shrinkage. Thus, there are on hyperparameter each in ridge and lasso regressions to tune.
+Logistic regression assumes that the predictors have a linear relationship with the outcome, all important predictors are present in the model, and there is no multicollinearity. In the regularized version of the logistic regression, we penalize the model for over-fitting by adding a penalty term. This constrains the size of the predicted coefficients. In unregularized logistic regression, there are no hyperparameter to be tuned. In the ridge regression, the penalty is the euclidean norm, whereas in lasso regression, the penalty is the least absolute shrinkage. Thus, there was one hyperparameter for each ridge and lasso regressions to tune.
 
 ## Implementation Plan
 
-First, split the sample into training and test set, with an 80-20 ratio. Next, make indices for 10-fold cross validation. Then, use recipe package, and define the first column (serial_num) as an ID, the second column (truth_val) as an outcome, and the remaining columns as predictors. Next, remove removes any variable with zero variance or near-zero variance, and keep only one of the columns which are highly correlated (a correlation of 0.5 or more). Lastly, transform the outcome into 1 and 2 instead of 0 and 1, to avoid a run-time error.
+First, split the sample into training and test set, with an 80-20 ratio. Next, make indices for 10-fold cross validation. Then, use recipe package, and define the first column (serial_num) as an ID, the second column (truth_val) as an outcome, and the remaining columns as predictors. Next, remove any variable with zero variance or near-zero variance, and keep only one of the columns which are medium to highly correlated (a correlation of 0.5 or more). Lastly, transform the outcome into 1 and 2 instead of 0 and 1, to avoid a run-time error.
 
 ## Metric for model comparison
 
-For model comparison, I will use area under the receiver operating characteristic (ROC) curve (AUC) as the metric. I will also compute the confusion metric, and evaluate the true positive rate, true negative rate, accuracy, and precision.
+For model comparison, I will use logistic loss (logLoss) and area under the receiver operating characteristic (ROC) curve (AUC) as the metric. I will also compute the confusion metric, and evaluate the true positive rate, true negative rate, accuracy, and precision.
 
 ## Packages required
 
@@ -98,13 +96,6 @@ I will discuss the model results for the small and large samples. While discussi
 
 ## Model Fit for small sample
 
-Table 1 summarizes the model fit on the small sample for the three models. The logLoss for unregularized, regularized with ridge penalty, and regularized with lasso penalty were 0.371, 0.342, and 0.357 respectively. The area under the ROC curve for the three models were 0.914, 0.921, and 0.919. As was expected, regularization improved the results slightly, as this sample had relatively large features to observation ratio. The best tune hyperparameters for the ridge logistic regression was 0.066, and for lasso losgistic regression was 0.0038. On this smaller sample, I choose the regularized logistic regression with ridge penalty as the final model for it's slight improvement. I chose a cut-off of 0.297 for this model. This cut-off was found found using the cutpointr package [@cutpointr], and maximizes the distinction between the negative and positive sets. 
-
-![Classification Plot for unregularized logistic regression plot](C:/Users/havis/Documents/images/lr_small.jpg)
-
-![Regularization paramter and classification plot for regularized logistic regression (ridge penalty)](C:/Users/havis/Documents/images/rlr_small.jpg)
-
-![Regularization paramter and classification plot for regularized logistic regression (lasso penalty)](C:/Users/havis/Documents/images/llr_small.jpg)
 ```{r, echo=FALSE, earning = FALSE, message = FALSE}
 library(flextable)
 library(tidyverse)
@@ -131,17 +122,19 @@ df %>%
     hline_bottom(border = fp_border_default())
 ```
 
+Table 1 summarizes the model fit on the small sample for the three models. The logLoss for unregularized, regularized with ridge penalty, and regularized with lasso penalty were 0.371, 0.342, and 0.357 respectively. The area under the ROC curve for the three models were 0.914, 0.921, and 0.919. As was expected, regularization improved the results slightly, as this sample had relatively large features to observation ratio. The best tune hyperparameters for the ridge logistic regression was 0.066, and for lasso losgistic regression was 0.0038. On this smaller sample, I choose the regularized logistic regression with ridge penalty as the final model for it's slight improvement. I chose a cut-off of 0.297 for this model. This cut-off was found found using the cutpointr package [@cutpointr], and maximizes the distinction between the negative and positive sets. Figures 4-6 shows the classification plots for the three models on the small sample. 
+
+![Classification Plot for unregularized logistic regression plot](C:/Users/havis/Documents/images/lr_small.jpg)
+
+![Regularization paramter and classification plot for regularized logistic regression (ridge penalty)](C:/Users/havis/Documents/images/rlr_small.jpg)
+
+![Regularization paramter and classification plot for regularized logistic regression (lasso penalty)](C:/Users/havis/Documents/images/llr_small.jpg)
+
+\newpage 
+
 ## Model Fit for large sample
 
-Table 2 summarizes the model fit on the small sample for the three models. The logLoss for unregularized, regularized with ridge penalty, and regularized with lasso penalty were 0.369, 0.368, and 0.369 respectively. The area under the ROC curve for the three models was 0.897 in all cases. As was expected, all regressions performed alike becuase of the smaller features to observations ratio. The best tune hyperparameters for the ridge logistic regression was 0.031, and for lasso losgistic regression was 0.001. On this larger sample, I choose the unregularized logistic regression for slightly higher precision. I chose a cut-off of 0.283 for this model. This cut-off was found found using the cutpointr package [@cutpointr], and maximizes the distinction between the negative and positive sets. 
-
-![Classification Plot for unregularized logistic regression plot](C:/Users/havis/Documents/images/lr_large.jpg)
-
-![Regularization paramter and classification plot for regularized logistic regression (ridge penalty)](C:/Users/havis/Documents/images/rlr_large.jpg)
-
-![Regularization paramter and classification plot for regularized logistic regression (lasso penalty)](C:/Users/havis/Documents/images/llr_large.jpg)
-
-\newpage
+Table 2 summarizes the model fit on the small sample for the three models. The logLoss for unregularized, regularized with ridge penalty, and regularized with lasso penalty were 0.369, 0.368, and 0.369 respectively. The area under the ROC curve for the three models was 0.897 in all cases. As was expected, all regressions performed alike becuase of the smaller features to observations ratio. The best tune hyperparameters for the ridge logistic regression was 0.031, and for lasso losgistic regression was 0.001. On this larger sample, I choose the unregularized logistic regression for slightly higher precision. I chose a cut-off of 0.283 for this model. This cut-off was found found using the cutpointr package [@cutpointr], and maximizes the distinction between the negative and positive sets. Figures 7-9 show classification plots for the three models for the larger dataset. 
 
 ```{r, echo = FALSE}
 a <- c("Unregularized Logistic Regression", 0.369, 0.283, 0.897, 0.830, 0.824, 0.832, 0.657)
@@ -168,13 +161,23 @@ df %>%
 ```
 
 
+
+![Classification Plot for unregularized logistic regression plot](C:/Users/havis/Documents/images/lr_large.jpg)
+
+![Regularization paramter and classification plot for regularized logistic regression (ridge penalty)](C:/Users/havis/Documents/images/rlr_large.jpg)
+
+![Regularization paramter and classification plot for regularized logistic regression (lasso penalty)](C:/Users/havis/Documents/images/llr_large.jpg)
+
+
 # Discussion
 
-All the three logistic models performed similarly, and the AUC was around 0.9 in all models and samples alike. This indicates that regularization doesn't significantly improve results. One reason for this could be to reduce the number of features at the outset, that reduced the possibility of potential over-fit. In the smaller sample, however, there were small improvements with regularization (a 0.1 improvement in the AUC metric). This could be because there were about 1,000 features for a training set of 4,000, i.e., a features to observation ratio of 1:4. In the larger sample, there was no difference between the models at all. Here, there were again 1,300 features but 40,000 observation, a feature to observation ratio of close to 1:40. However, the model did well and had an accuracy of around 83-86%. I would say I was surprised how well the model performed with the ResNet-50 features, however, expected the different models to perform in the way they did due to the sizes. The model performance slightly dropped on the larger set, this could probably be because of the larger sample size. 
+All the three logistic models performed similarly, and the AUC was around 0.9 in all models and samples sizes. This indicates that regularization doesn't significantly improve results. One reason for this could be that I removed moderate to highly correlated columns in the beginning, bringing the features to less than 1/4th of its original size. This could have reduced the possibility of potential over-fit. It would be interesting to see how the models performed without removing correlated columns, or removing only those columns with high correlation (0.8 or higher). 
 
-There were around 20 ResNet-50 features that were assigned an importance of more than 50, and 700 features with importance of more than 20. However, just reading the features wasn't very insightful by itself. There are a number of limitations of this project. First, the feature-generating model, ResNet-50, was not developed on medical images. Second, due to the high computation requirement for the projects, I could only work with a subset of the total sample. Next, I did not perform any data augmentation on the images, something that is plausible in real-life scenarios, to improve the model learning. Lastly, though the simple logistic regression model is comparatively easier to explain and led to acceptable performance, classical machine learning approaches are no longer used in image analysis problems for a number of reasons. Thus, future models to be used in practical situations could be built on neural networks or model ensembles, instead of just a single model. 
+In the smaller sample, however, there were small improvements with regularization (a 0.1 improvement in the AUC metric). This could be because there were about 1,000 features for a training set of 4,000, i.e., a features to observation ratio of 1:4. In the larger sample, there was no difference between the models. Here, there were 1,300 features but 40,000 observation, a feature to observation ratio of close to 1:40. Overall, and to my surprise, the models did well and had an accuracy of around 83-86%. It would be interesting to compare the results with the original 7,500 pixel features and compare it to the current model, to know whether the model would still perform decently without the aid of ResNet-50 features. Another point to note was that the model performance slightly dropped on the larger set, this could probably be because of the larger sample size. 
 
-On my personal end, there were a number of learning points during the project, the most important being running into resources bottleneck. Though frustrating at points, it was 
+In terms of importance, there were around 20 ResNet-50 features that were assigned an importance of more than 50, and 700 features with importance of more than 20. However, just reading the features wasn't very insightful by itself. There are a number of limitations of this project. First, the feature-generating model, ResNet-50, was not developed on medical images. Second, due to the high computation requirement for the projects, I could only work with a subset of the total sample. Next, I did not perform any data augmentation on the images, something that is plausible in real-life scenarios. Lastly, though the simple logistic regression model is comparatively easier to explain and led to acceptable performance when built on top of ResNet-50 features, classical machine learning approaches are rarely used in modern image analysis problems for a number of reasons. Thus, future models could be built using neural networks approaches or model ensembles.
+
+On my personal end, there were a number of learning points during the project. Reading and pre-processing image data was something very new I tried. To be able to run models, I had to make a number of decision - how much sample to consider, when to reduce size of the data, etc., and this made me cognizant of the decisions one has to make in machine learning practices. 
 
 \newpage
 
